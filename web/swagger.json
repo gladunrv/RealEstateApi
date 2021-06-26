@@ -1,0 +1,311 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": " <h2>Обработка ошибок</h2> <h4>Сводный список кодов состояния HTTP:</h4> <ul> <li><b>200</b>: OK. Все сработало именно так, как и ожидалось.</li> <li><b>201</b>: Ресурс был успешно создан в ответ на POST-запрос. Заголовок Location содержит URL, указывающий на только что созданный ресурс.</li> <li><b>204</b>: Запрос обработан успешно, и в ответе нет содержимого (для запроса DELETE, например).</li> <li><b>304</b>: Ресурс не изменялся. Можно использовать закэшированную версию.</li> <li><b>400</b>: Неверный запрос. Может быть связано с разнообразными проблемами на стороне пользователя, такими как неверные JSON-данные в теле запроса, неправильные параметры действия, и т.д.</li> <li><b>401</b>: Аутентификация завершилась неудачно.</li> <li><b>403</b>: Аутентифицированному пользователю не разрешен доступ к указанной точке входа API.</li> <li><b>404</b>: Запрошенный ресурс не существует.</li> <li><b>405</b>: Метод не поддерживается. Сверьтесь со списком поддерживаемых HTTP-методов в заголовке Allow.</li> <li><b>415</b>: Не поддерживаемый тип данных. Запрашивается неправильный тип данных или номер версии.</li> <li><b>422</b>: Проверка данных завершилась неудачно (в ответе на POST-запрос, например). Подробные сообщения об ошибках смотрите в теле ответа.</li> <li><b>429</b>: Слишком много запросов. Запрос отклонен из-за превышения ограничения частоты запросов.</li> <li><b>500</b>: Внутренняя ошибка сервера. Возможная причина — ошибки в самой программе.</li> ",
+    "version": "1.0.0",
+    "title": "RealEstateApi",
+    "contact": {
+      "name": "Roman Hladun",
+      "email": "gladunrv@gmail.com"
+    }
+  },
+  "host": "127.0.0.1:8001",
+  "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/apartments": {
+      "get": {
+        "tags": [
+          "Квартиры"
+        ],
+        "summary": "Получить массив объектов квартир (поиск)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Номер текущей страницы",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "per-page",
+            "in": "query",
+            "description": "Количество записей на одной странице",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Поле сортировки",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "Значение сортировки может быть истинным / ложным. true => по возрастанию, а false => по убыванию",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "Свойства, которые необходимо учитывать для фильтра, например \"id,title\"",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Свойства, которые необходимо учитывать для поиска, например \"search[title]=abc\"",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Apartment"
+              }
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Квартиры"
+        ],
+        "summary": "Добавить квартиру",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Apartment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Apartment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Apartment"
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/apartments/{id}": {
+      "put": {
+        "tags": [
+          "Квартиры"
+        ],
+        "summary": "Обновить данные квартиры",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор квартиры",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "Apartment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Apartment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Apartment"
+            }
+          },
+          "400": {
+            "description": "Ошибка",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Apartment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "city": {
+          "type": "string",
+          "format": "uuid",
+          "example": "Москва",
+          "description": "Город"
+        },
+        "district": {
+          "type": "string",
+          "format": "uuid",
+          "example": "Центр",
+          "description": "Район"
+        },
+        "address": {
+          "type": "string",
+          "format": "uuid",
+          "example": "Почтовая, 30",
+          "description": "Адрес"
+        },
+        "residential_complex": {
+          "type": "string",
+          "format": "uuid",
+          "example": "ЖК Почтовий",
+          "description": "Жилой комплекс"
+        },
+        "block": {
+          "type": "string",
+          "format": "uuid",
+          "example": "1",
+          "description": "Корпус"
+        },
+        "total_floors": {
+          "type": "integer",
+          "format": "int32",
+          "example": 123,
+          "description": "Всего этажей"
+        },
+        "floor": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12,
+          "description": "Этаж"
+        },
+        "rooms": {
+          "type": "integer",
+          "format": "int32",
+          "example": 4,
+          "description": "Количество комнат"
+        },
+        "area": {
+          "type": "integer",
+          "format": "int32",
+          "example": 121,
+          "description": "Площадь квартиры (м2)"
+        },
+        "rent_price": {
+          "type": "integer",
+          "format": "int32",
+          "example": 12134,
+          "description": "Стоимость аренды (руб)"
+        }
+      },
+      "description": "Квартира"
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "format": "uuid",
+          "example": "Unauthorized"
+        },
+        "message": {
+          "type": "string",
+          "format": "uuid",
+          "example": "Your request was made with invalid credentials."
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "example": 0
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "example": 401
+        },
+        "type": {
+          "type": "string",
+          "format": "uuid",
+          "example": "yii\\\\web\\\\UnauthorizedHttpException"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "pageParam": {
+      "name": "page",
+      "in": "query",
+      "description": "Номер текущей страницы",
+      "required": false,
+      "type": "integer"
+    },
+    "limitParam": {
+      "name": "per-page",
+      "in": "query",
+      "description": "Количество записей на одной странице",
+      "required": false,
+      "type": "integer"
+    },
+    "sortParam": {
+      "name": "sort",
+      "in": "query",
+      "description": "Поле сортировки",
+      "required": false,
+      "type": "string"
+    },
+    "orderParam": {
+      "name": "order",
+      "in": "query",
+      "description": "Значение сортировки может быть истинным / ложным. true => по возрастанию, а false => по убыванию",
+      "required": false,
+      "type": "integer"
+    },
+    "searchParam": {
+      "name": "search",
+      "in": "query",
+      "description": "Свойства, которые необходимо учитывать для поиска, например \"search[title]=abc\"",
+      "required": false,
+      "type": "string"
+    },
+    "fieldsParam": {
+      "name": "fields",
+      "in": "query",
+      "description": "Свойства, которые необходимо учитывать для фильтра, например \"id,title\"",
+      "required": false,
+      "type": "string"
+    },
+    "hashParam": {
+      "name": "hash",
+      "in": "query",
+      "description": "Используется для проверки подлинности данных переданных в body, hash = md5( body + secret_key)",
+      "required": false,
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+version: '2'
+services:
+  php:
+    image: yiisoftware/yii2-php:7.4-apache
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - '8001:80'
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=verysecret
+      - MYSQL_DATABASE=yii2advanced
+      - MYSQL_USER=yii2advanced
+      - MYSQL_PASSWORD=secret
+    ports:
+      # just if you also want to access it directly from you host
+      # node neede for phpmyadmin
+      - "3306:3306"
+  phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - '8888:80'
+        environment:
+            - PMA_HOST=mysql
+        depends_on:
+            - mysql
