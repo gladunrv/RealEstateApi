@@ -2,15 +2,24 @@
 
 namespace app\models;
 
+use app\models\Apartment;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Apartment;
 
 /**
  * ApartmentSearch represents the model behind the search form of `app\models\Apartment`.
  */
 class ApartmentSearch extends Apartment
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    public function formName()
+    {
+        return 'search';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -59,7 +68,7 @@ class ApartmentSearch extends Apartment
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'total_floors' => $this->total floors,
+            'total_floors' => $this->total_floors,
             'floor' => $this->floor,
             'rooms' => $this->rooms,
             'area' => $this->area,
